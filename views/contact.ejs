@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age of Animals</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            color: #333;
+        }
+
+        .animal-card {
+            margin-bottom: 20px;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .animal-card h5 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .animal-card .age {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #6c757d;
+        }
+
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Age of Animals</h1>
+
+        <!-- Animal Data Section (For Displaying Animals' Age) -->
+        <div id="animalList">
+            <!-- Example Animal Entries -->
+            <div class="animal-card">
+                <div>
+                    <h5>KAMPRET</h5>
+                    <p class="age">Age: 9 years</p>
+                </div>
+                <button class="btn btn-info">Update Age</button>
+            </div>
+        <hr>
+
+        <!-- Form to Add a New Animal with Age -->
+        <h3>Add New Animal</h3>
+        <form id="addAnimalForm">
+            <div class="form-group">
+                <label for="animalName">Animal Name:</label>
+                <input type="text" class="form-control" id="animalName" required>
+            </div>
+            <div class="form-group">
+                <label for="animalAge">Animal Age (Years):</label>
+                <input type="number" class="form-control" id="animalAge" required min="0">
+            </div>
+            <button type="submit" class="btn btn-primary">Add Animal</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Handle adding a new animal
+            $('#addAnimalForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const animalName = $('#animalName').val().trim();
+                const animalAge = $('#animalAge').val();
+
+                if (animalName && animalAge >= 0) {
+                    // Display new animal on the page
+                    const newAnimalCard = `
+                        <div class="animal-card">
+                            <div>
+                                <h5>${animalName}</h5>
+                                <p class="age">Age: ${animalAge} years</p>
+                            </div>
+                            <button class="btn btn-info">Update Age</button>
+                        </div>
+                    `;
+
+                    $('#animalList').append(newAnimalCard);
+                    $('#animalName').val('');
+                    $('#animalAge').val('');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

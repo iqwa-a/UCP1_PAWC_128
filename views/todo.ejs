@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kumpulan Hewan Liar</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1512452582542-8ba634467b6a');
+            background-size: cover;
+            background-position: center;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .form-control {
+            font-size: 1.1rem;
+            border-radius: 10px;
+        }
+
+        .btn-primary, .btn-success, .btn-danger {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover, .btn-success:hover, .btn-danger:hover {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+
+        .input-group .form-control {
+            border-radius: 10px;
+        }
+
+        .list-group-item {
+            border-radius: 15px;
+            margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.02);
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            border-bottom: none;
+        }
+
+        .modal-body {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .btn-close {
+            background-color: transparent;
+            border: none;
+        }
+
+        .btn-close:hover {
+            background-color: transparent;
+        }
+
+        /* Hover effect on List Items */
+        .list-group-item i {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .list-group-item:hover i {
+            transform: scale(1.2);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">KUMPULAN HEWAN LIAR</h1>
+
+        <!-- Form to Add New Todo -->
+        <form id="addTodoForm" class="my-4">
+            <div class="input-group">
+                <input type="text" id="newTask" class="form-control" placeholder="Tambah hewan baru..." required>
+                <input type="number" id="newAge" class="form-control ms-2" placeholder="Umur Hewan" required>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Tambah Hewan</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- List of Todos -->
+        <ul id="todoList" class="list-group">
+            <% todos.forEach(todo => { %>
+                <li class="list-group-item">
+                    <span class="<%= todo.completed ? 'completed' : '' %>">
+                        <%= todo.task %> - Umur: <%= todo.age %> Tahun
+                    </span>
+                    <div>
+                        <button class="btn btn-sm btn-success mr-2 editBtn" data-id="<%= todo.id %>">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger deleteBtn" data-id="<%= todo.id %>">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+
+        <!-- Edit Todo Modal -->
+        <div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editModalLabel">Edit Hewan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editTodoForm">
+                            <div class="form-group">
+                                <label for="editTask">Nama Hewan</label>
+                                <input type="text" id="editTask" class="form-control" required>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="editAge">Umur Hewan</label>
+                                <input type="number" id="editAge" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Simpan Perubahan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0-alpha1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add new todo
+            $('#addTodoForm').on('submit', function (e) {
+                e.preventDefault();
+                const task = $('#newTask').val().trim();
+                const age = $('#newAge').val().trim();
+                if (task && age) {
+                    $.ajax({
+                        url: '/todos',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ task: task, age: age }),
+                        success: function (newTodo) {
+                            location.reload(); // Reload to show the new todo
+                        },
+                        error: function (error) {
+                            console.error("Error adding task:", error.responseText);
+                        }
+                    });
+                }
+            });
+
+            // Delete a todo
+            $('.deleteBtn').on('click', function () {
+                const id = $(this).data('id');
+                $.ajax({
+                    url: '/todos/' + id,
+                    type: 'DELETE',
+                    success: function () {
+                        location.reload(); // Reload to show updated list
+                    }
+                });
+            });
+
+            // Show edit modal with the current task
+            let editId;
+            $('.editBtn').on('click', function () {
+                editId = $(this).data('id');
+                const currentTask = $(this).closest('li').find('span').text().split(' - ')[0];
+                const currentAge = $(this).closest('li').find('span').text().split('Umur: ')[1];
+                $('#editTask').val(currentTask);
+                $('#editAge').val(currentAge);
+                $('#editModal').modal('show');
+            });
+
+            // Update todo on form submission
+            $('#editTodoForm').on('submit', function (e) {
+                e.preventDefault();
+                const task = $('#editTask').val().trim();
+                const age = $('#editAge').val().trim();
+                if (task && age) {
+                    $.ajax({
+                        url: '/todos/' + editId,
+                        type: 'PUT',
+                        data: JSON.stringify({ task: task, age: age, completed: false }),
+                        contentType: 'application/json',
+                        success: function () {
+                            location.reload(); // Reload to show the updated todo
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
